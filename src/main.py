@@ -13,7 +13,7 @@ import logging
 from datetime import datetime
 
 from src.bridge_aggregator import BridgeAggregator, BridgeRoute
-from src.x402_middleware import X402Middleware
+from src.x402_middleware_dual import X402Middleware
 
 # Configure logging
 logging.basicConfig(
@@ -50,7 +50,10 @@ app.add_middleware(
     X402Middleware,
     payment_address=payment_address,
     base_url=base_url,
-    facilitator_url="https://facilitator.daydreams.systems",
+    facilitator_urls=[
+        "https://facilitator.daydreams.systems",
+        "https://api.cdp.coinbase.com/platform/v2/x402/facilitator"
+    ],
     free_mode=free_mode,
 )
 
@@ -623,7 +626,12 @@ async def entrypoint_bridge_get():
     return JSONResponse(content=metadata, status_code=402)
 
 
-@app.post("/entrypoints/bridge-route-pinger/invoke")
+@app.post(
+    "/entrypoints/bridge-route-pinger/invoke",
+    summary="Cross-Chain Bridge Route Finder",
+    description="Find optimal bridge routes with live fees and timing across 10+ chains. Aggregates Socket and LI.FI to provide best cross-chain bridging options with accurate fee estimates and transfer times.",
+    response_description="Available bridge routes with fees and ETAs"
+)
 async def entrypoint_bridge(request: BridgeRequest):
     """
     AP2 (Agent Payments Protocol) compatible entrypoint
