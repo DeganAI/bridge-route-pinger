@@ -6,6 +6,7 @@ Combines results from Socket, LI.FI, and other bridge APIs
 import logging
 from typing import List, Optional
 import asyncio
+from pydantic import BaseModel, Field
 
 from src.socket_client import SocketClient
 from src.lifi_client import LifiClient
@@ -61,38 +62,21 @@ TOKEN_ADDRESSES = {
 }
 
 
-class BridgeRoute:
+class BridgeRoute(BaseModel):
     """Represents a bridge route option"""
-
-    def __init__(
-        self,
-        bridge_name: str,
-        route_id: str,
-        from_chain: int,
-        to_chain: int,
-        token_in: str,
-        token_out: str,
-        amount_in: str,
-        amount_out: str,
-        fee_usd: str,
-        eta_minutes: int,
-        requirements: List[str],
-        steps: List[str],
-        source: str,
-    ):
-        self.bridge_name = bridge_name
-        self.route_id = route_id
-        self.from_chain = from_chain
-        self.to_chain = to_chain
-        self.token_in = token_in
-        self.token_out = token_out
-        self.amount_in = amount_in
-        self.amount_out = amount_out
-        self.fee_usd = fee_usd
-        self.eta_minutes = eta_minutes
-        self.requirements = requirements
-        self.steps = steps
-        self.source = source
+    bridge_name: str
+    route_id: str
+    from_chain: int
+    to_chain: int
+    token_in: str
+    token_out: str
+    amount_in: str
+    amount_out: str
+    fee_usd: str = Field(description="Fee in USD")
+    eta_minutes: int = Field(description="Estimated time in minutes")
+    requirements: List[str] = Field(description="Additional requirements (gas tokens, etc.)")
+    steps: List[str] = Field(description="Step-by-step description")
+    source: str = Field(description="API source (socket_api, lifi_api, etc.)")
 
 
 class BridgeAggregator:

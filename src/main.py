@@ -12,7 +12,7 @@ import os
 import logging
 from datetime import datetime
 
-from src.bridge_aggregator import BridgeAggregator
+from src.bridge_aggregator import BridgeAggregator, BridgeRoute
 
 # Configure logging
 logging.basicConfig(
@@ -75,23 +75,6 @@ class BridgeRequest(BaseModel):
         description="Destination chain ID",
         example=42161
     )
-
-
-class BridgeRoute(BaseModel):
-    """Bridge route details"""
-    bridge_name: str
-    route_id: str
-    from_chain: int
-    to_chain: int
-    token_in: str
-    token_out: str
-    amount_in: str
-    amount_out: str
-    fee_usd: str = Field(description="Fee in USD")
-    eta_minutes: int = Field(description="Estimated time in minutes")
-    requirements: List[str] = Field(description="Additional requirements (gas tokens, etc.)")
-    steps: List[str] = Field(description="Step-by-step description")
-    source: str = Field(description="API source (socket_api, lifi_api, etc.)")
 
 
 class BridgeResponse(BaseModel):
