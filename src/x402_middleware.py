@@ -124,9 +124,11 @@ class X402Middleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         """Process request and verify payment if required"""
 
+        logger.info(f"x402 Middleware processing: {request.method} {request.url.path}")
+
         # Skip payment verification in free mode
         if self.free_mode:
-            logger.debug("FREE_MODE enabled, skipping payment verification")
+            logger.info("FREE_MODE enabled, skipping payment verification")
             return await call_next(request)
 
         # Skip verification for health check and metadata endpoints
