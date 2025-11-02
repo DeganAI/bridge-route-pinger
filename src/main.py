@@ -613,13 +613,27 @@ async def entrypoint_bridge_get():
             {
                 "scheme": "exact",
                 "network": "base",
-                "maxAmountRequired": "50000",
+                "maxAmountRequired": "50000",  # 0.05 USDC (6 decimals)
                 "resource": f"{base_url}/entrypoints/bridge-route-pinger/invoke",
                 "description": "Get bridge routes and live fee/time quotes for token transfers",
                 "mimeType": "application/json",
                 "payTo": payment_address,
                 "maxTimeoutSeconds": 30,
-                "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",  # USDC on Base
+                "outputSchema": {
+                    "input": {
+                        "type": "http",
+                        "method": "POST",
+                        "bodyType": "json",
+                        "bodyFields": {
+                            "token": {"type": "string", "required": True, "description": "Token symbol or address to bridge"},
+                            "amount": {"type": "string", "required": True, "description": "Amount to transfer in token decimals"},
+                            "from_chain": {"type": "number", "required": True, "description": "Source chain ID"},
+                            "to_chain": {"type": "number", "required": True, "description": "Destination chain ID"}
+                        }
+                    },
+                    "output": {"type": "object", "description": "Bridge routes with live fee and time quotes"}
+                }
             }
         ]
     }
