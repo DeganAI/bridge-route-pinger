@@ -110,6 +110,11 @@ async def root():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Bridge Route Pinger - Cross-Chain Bridge Quotes</title>
+        <meta name="description" content="List viable bridge routes and live fee/time quotes for token transfers via x402 micropayments">
+        <meta property="og:title" content="Bridge Route Pinger">
+        <meta property="og:description" content="List viable bridge routes and live fee/time quotes for token transfers via x402 micropayments">
+        <meta property="og:image" content="https://bridge-route-pinger-production-1647.up.railway.app/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌉</text></svg>">
         <style>
             * {{ margin: 0; padding: 0; box-sizing: border-box; }}
             body {{
@@ -526,6 +531,14 @@ async def x402_metadata():
     }
 
     return JSONResponse(content=metadata, status_code=402)
+
+
+@app.get("/favicon.ico")
+async def favicon():
+    """Favicon endpoint"""
+    from fastapi.responses import Response
+    svg_content = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌉</text></svg>'
+    return Response(content=svg_content, media_type="image/svg+xml")
 
 
 @app.get("/health")
